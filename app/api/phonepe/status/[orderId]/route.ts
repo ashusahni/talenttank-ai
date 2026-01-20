@@ -24,9 +24,10 @@ const client = StandardCheckoutClient.getInstance(
 
 export async function GET(
   request: Request | NextRequest,
-  context: { params: { orderId?: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ): Promise<NextResponse<StatusResponseBody>> {
-  const merchantOrderId = context.params?.orderId;
+  const { orderId } = await params;
+  const merchantOrderId = orderId;
   console.debug('📦 Received orderId:', merchantOrderId);
 
   if (!merchantOrderId) {
