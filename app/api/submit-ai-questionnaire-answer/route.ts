@@ -152,7 +152,9 @@ export async function POST(req: Request) {
 			candidateOverview: z.string(),
 		})
 
-		const structured_llm = llm.withStructuredOutput(AiAnalysisResponse, { name: 'ai_analysis' })
+		type AiAnalysisResponseType = z.infer<typeof AiAnalysisResponse>
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const structured_llm = (llm as any).withStructuredOutput(AiAnalysisResponse, { name: 'ai_analysis' }) as { invoke: (input: unknown) => Promise<AiAnalysisResponseType> }
 		const promptResponse = await promptTemplate.invoke({
 			text: prompt,
 		})
