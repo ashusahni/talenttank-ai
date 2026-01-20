@@ -1,16 +1,17 @@
 'use client';
-import { usePhonePePayment } from '@/app/_hooks/usePhonePePayment';
+// TEMPORARY: Commented out due to missing usePhonePePayment hook
+// import { usePhonePePayment } from '@/app/_hooks/usePhonePePayment';
 import { Button } from '@/components/ui/button';
 
 export default function PaymentButton({ amount }: { amount: number }) {
-  const { initiatePayment, loading, error } = usePhonePePayment();
+  // const { initiatePayment, loading, error } = usePhonePePayment();
 
   return (
     <div>
-      <Button onClick={() => initiatePayment(amount)} disabled={loading}>
-        {loading ? 'Processing...' : `Pay ₹${amount}`}
+      <Button onClick={() => console.log('Payment clicked:', amount)} disabled={false}>
+        {`Pay ₹${amount}`}
       </Button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {/* {error && <p className="text-red-500 mt-2">{error}</p>} */}
     </div>
   );
 }

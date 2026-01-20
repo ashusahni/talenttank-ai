@@ -62,12 +62,14 @@ export async function POST(request: Request) {
 			['human', '{text}'],
 		])
 
-		const QuestionArraySchema = z.object({
-			count: z.number(),
-			questions: z.array(AiQuestionSchema),
-		})
+	const QuestionArraySchema = z.object({
+		count: z.number(),
+		questions: z.array(AiQuestionSchema),
+	})
 
-		const structured_llm = llm.withStructuredOutput(QuestionArraySchema, { name: 'questions' })
+	type QuestionArrayType = z.infer<typeof QuestionArraySchema>
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const structured_llm = (llm as any).withStructuredOutput(QuestionArraySchema, { name: 'questions' }) as { invoke: (input: unknown) => Promise<QuestionArrayType> }
 		const promptResponse = await promptTemplate.invoke({
 			text: prompt,
 		})

@@ -8,9 +8,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    // --- THE CHANGE IS HERE ---
-    // Switched from "bundler" to "node" for broader compatibility with generated types.
-    "moduleResolution": "node", 
+    "moduleResolution": "bundler", 
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
