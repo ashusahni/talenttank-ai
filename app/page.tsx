@@ -14,10 +14,10 @@ import {
 import TestimonialCard from "@/components/testimonial-card";
 import FeatureCard from "@/components/feature-card";
 import PricingCard from "@/components/pricing-card";
-import { usePhonePePayment } from "@/app/_hooks/usePhonePePayment";
+// import { usePhonePePayment } from "@/app/_hooks/usePhonePePayment";
 
 export default function LandingPage() {
-  const { initiatePayment, loading } = usePhonePePayment();
+  // const { initiatePayment, loading } = usePhonePePayment();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -154,8 +154,8 @@ export default function LandingPage() {
                 ]}
                 buttonText="Subscribe Now"
                 highlighted
-                onClick={() => initiatePayment(599)}
-                loading={loading}
+                // onClick={() => initiatePayment(599)}
+                // loading={loading}
               />
             </div>
           </div>
