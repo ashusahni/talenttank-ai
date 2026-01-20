@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id                     String                   @id @default(cuid())
+  firstName              String
+  lastName               String
+  email                  String                   @unique
+  password               String
+  countryCode            String
+  phoneNumber            String
+  testCreated            Int                      @default(0) //this test created is marked on the step where the user is submitting normal questions and creating AI questions
+  totalPaymentMade       Float                    @default(0)
+  totalCredits           Int                      @default(0)
+  usedCredits            Int                      @default(0)
+  remainingCredits       Int                      @default(0)
+  role                   UserRole
+  avatarUrl              String?
+  dateOfBirth            DateTime
+  jobTitle               String?
+  company                String?
+  yearsOfExperience      Int?
+  linkedinUrl            String?
+  githubUrl              String?
+  twitterUrl             String?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  Answers                Answers[]
+  AIQuestionnaireAnswers AIQuestionnaireAnswers[]
+  Payment                Payment[]
+}
+
+enum QuestionType {
+  multiple_choice
+  input_text
+}
+
+model Answers {
+  id      Int    @id @default(autoincrement())
+  answers Json[]
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum AIQuestionCategoryEnum {
+  predictive_index
+  emotional_intelligence
+}
+
+model AIQuestion {
+  id                Int                    @id @default(autoincrement())
+  question          String
+  type              QuestionType
+  options           String[]
+  placeholder       String?
+  category          AIQuestionCategoryEnum
+  aIQuestionnaireId Int
+  AIQuestionnaire   AIQuestionnaire        @relation(fields: [aIQuestionnaireId], references: [id], onDelete: Cascade)
+}
+
+model AIQuestionnaire {
+  id                     Int                      @id @default(autoincrement())
+  totalQuestions         Int
+  questions              AIQuestion[]
+  AIQuestionnaireAnswers AIQuestionnaireAnswers[]
+}
+
+model AIQuestionnaireAnswers {
+  id                           Int      @id @default(autoincrement())
+  answersWithQuestions         Json[]
+  averagePredictiveIndex       Int
+  averageEmotionalIntelligence Int
+  userSummary                  String
+  improvementSuggestions       String
+  overallSuitability           String
+  areasForImprovement          String
+  feedback                     String
+  strengths                    String[]
+  candidateOverview            String
+
+  userId String
+  User   User?  @relation(fields: [userId], references: [id])
+
+  aiQuestionnaireId Int
+  AIQuestionnaire   AIQuestionnaire? @relation(fields: [aiQuestionnaireId], references: [id])
+  createdAt         DateTime         @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  amount            Float
+  status            PaymentStatus @default(PENDING)
+  provider          String // e.g., "RAZORPAY", "PHONEPE"
+  providerPaymentId String        @unique // The unique transaction/order ID from the payment provider
+  providerSignature String?       // A signature or token used for verification, if any
+  paymentMethod     String?       // e.g., "card", "upi", "netbanking"
+  
+  userId            String
+  User              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
