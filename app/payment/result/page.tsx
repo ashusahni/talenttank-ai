@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import axios from 'axios';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function PaymentResult() {
+function PaymentResultContent() {
   const params = useSearchParams();
   const router = useRouter();
   const orderId = params.get('orderId');
@@ -47,5 +47,13 @@ export default function PaymentResult() {
         Go to Home
       </button>
     </div>
+  );
+}
+
+export default function PaymentResult() {
+  return (
+    <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
+      <PaymentResultContent />
+    </Suspense>
   );
 }
